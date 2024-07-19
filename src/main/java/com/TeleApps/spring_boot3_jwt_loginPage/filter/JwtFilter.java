@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.TeleApps.spring_boot3_jwt_loginPage.config.UserInfoUserDetailsService;
 import com.TeleApps.spring_boot3_jwt_loginPage.service.JwtService;
 
 import jakarta.servlet.FilterChain;
@@ -25,16 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    // private final JwtService jwtService;
-    // private final UserDetailsService userDetailsService;
-
-    // public JwtFilter(JwtService jwtService, UserDetailsService
-    // userDetailsService) {
-    // this.jwtService = jwtService;
-    // this.userDetailsService = userDetailsService;
-    // }
+    private UserInfoUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
