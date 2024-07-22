@@ -27,12 +27,6 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter authFilter;
 
-    // private final JwtFilter authFilter;
-
-    // public SecurityConfig(JwtFilter authFilter) {
-    // this.authFilter = authFilter;
-    // }
-
     @Bean
     public UserDetailsService userDetailsService() {
         // UserDetails admin = User.withUsername("Basant")

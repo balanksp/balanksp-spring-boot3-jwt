@@ -36,7 +36,6 @@ public class LoginController {
 
     @GetMapping("/testing")
     public String welcome() {
-        System.out.println("-------->");
         return "Welcome this endpoint is not secure";
     }
 
@@ -69,5 +68,10 @@ public class LoginController {
             throw new UsernameNotFoundException("invalid user request !");
         }
     }
+
+    // @GetMapping("/testing")
+    // public String welcome() {
+    // return "Welcome this endpoint is not secure";
+    // }
 
 }
