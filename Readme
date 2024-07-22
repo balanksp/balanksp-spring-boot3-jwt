@@ -1,0 +1,14 @@
+The application is a Spring Boot-based JWT authentication and authorization system. 
+It uses a SQL Server database for persistence, and it is configured with Spring Security to protect API endpoints based on user roles. JWT tokens are used to manage authentication sessions.
+
+Registration  
+LoginController -> UserProService -> UserInfoRepo (password encoding and saving user data).
+Output=> success message.
+
+Authentication
+LoginController -> AuthenticationManager -> UserInfoUserDetailsService -> JwtService (generate JWT token).
+Output=> JWT token.
+
+Secured Data Access
+JwtFilter -> JwtService (validate token and set authentication) -> LoginController (endpoint access control via @PreAuthorize).
+Output=> Secured data ( list of product / product details).

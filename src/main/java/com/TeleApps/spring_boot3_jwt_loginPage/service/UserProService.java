@@ -1,6 +1,7 @@
 package com.TeleApps.spring_boot3_jwt_loginPage.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,10 +40,15 @@ public class UserProService {
 
     public String addUser(UserInformation userInfo) {
         // userInfo.setPassword(userInfo.getPassword());
-        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
-        System.out.println("user successfully added");
-        repo.save(userInfo);
-        return "user successfully added";
+        Optional<UserInformation> existingUser = repo.findByName(userInfo.getName());
+        if (existingUser.isPresent()) {
+            return "Username already exists. User not added.";
+        } else {
+            userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+            System.out.println("user successfully added");
+            repo.save(userInfo);
+            return "user successfully added";
+        }
     }
 
     public List<Product> getProducts() {
