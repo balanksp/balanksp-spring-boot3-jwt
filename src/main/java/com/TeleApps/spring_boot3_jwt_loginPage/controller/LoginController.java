@@ -1,13 +1,19 @@
 package com.TeleApps.spring_boot3_jwt_loginPage.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.TeleApps.spring_boot3_jwt_loginPage.dto.AuthRequest;
 import com.TeleApps.spring_boot3_jwt_loginPage.dto.Product;
 import com.TeleApps.spring_boot3_jwt_loginPage.entity.UserInformation;
+import com.TeleApps.spring_boot3_jwt_loginPage.response.UserResponse;
 import com.TeleApps.spring_boot3_jwt_loginPage.service.JwtService;
 import com.TeleApps.spring_boot3_jwt_loginPage.service.UserProService;
 
 @RestController
 @RequestMapping("/login")
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class LoginController {
 
     @Autowired
@@ -39,9 +48,19 @@ public class LoginController {
         return "Welcome this endpoint is not secure";
     }
 
-    @PostMapping("/new")
-    public String addNewUser(@RequestBody UserInformation userInfo) {
-        return service.addUser(userInfo);
+    // @PostMapping("/new")
+    // public String addNewUser(@RequestBody UserInformation userInfo) {
+    // return service.addUser(userInfo);
+    // }
+
+    @PostMapping(value = "/new", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> registerNewUser(@RequestBody UserInformation userInfo) {
+        UserResponse responseMsg = service.addUser(userInfo);
+        // Map<String, String> response = new HashMap<>();
+        // response.put("message", response);
+        return ResponseEntity.status(responseMsg.getStatus()).body(responseMsg.getMessage());
+        // return
+        // ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(response);
     }
 
     @GetMapping("/all")
@@ -69,9 +88,9 @@ public class LoginController {
         }
     }
 
-    // @GetMapping("/testing")
-    // public String welcome() {
-    // return "Welcome this endpoint is not secure";
-    // }
+    @PostMapping("/Register")
+    public UserInformation addNewUser(@RequestBody UserInformation userInfo) {
+        return service.regUser(userInfo);
+    }
 
 }

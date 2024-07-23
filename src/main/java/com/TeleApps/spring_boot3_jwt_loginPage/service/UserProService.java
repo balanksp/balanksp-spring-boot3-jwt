@@ -7,12 +7,17 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.TeleApps.spring_boot3_jwt_loginPage.dto.Product;
 import com.TeleApps.spring_boot3_jwt_loginPage.entity.UserInformation;
 import com.TeleApps.spring_boot3_jwt_loginPage.repository.UserInfoRepo;
+import com.TeleApps.spring_boot3_jwt_loginPage.response.UserResponse;
 
 import jakarta.annotation.PostConstruct;
 
@@ -38,16 +43,17 @@ public class UserProService {
                 .collect(Collectors.toList());
     }
 
-    public String addUser(UserInformation userInfo) {
+    public UserResponse addUser(UserInformation userInfo) {
         // userInfo.setPassword(userInfo.getPassword());
         Optional<UserInformation> existingUser = repo.findByName(userInfo.getName());
         if (existingUser.isPresent()) {
-            return "Username already exists. User not added.";
+            return new UserResponse("Username already exists. User not added.",
+                    HttpStatus.CONFLICT, null);
         } else {
             userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
             System.out.println("user successfully added");
             repo.save(userInfo);
-            return "user successfully added";
+            return new UserResponse("user successfully added", HttpStatus.CREATED, userInfo);
         }
     }
 
@@ -60,6 +66,18 @@ public class UserProService {
                 .filter(product -> product.getProductId() == id)
                 .findAny()
                 .orElseThrow(() -> new RuntimeException("product " + id + " not found"));
+    }
+
+    public UserInformation regUser(UserInformation userInfo) {
+        Optional<UserInformation> existingUser = repo.findByName(userInfo.getName());
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        } else {
+            userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+            UserInformation savedUser = repo.save(userInfo);
+            return savedUser;
+
+        }
     }
 
 }
