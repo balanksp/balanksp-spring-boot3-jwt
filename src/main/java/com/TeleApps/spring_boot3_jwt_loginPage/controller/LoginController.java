@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +32,6 @@ import com.TeleApps.spring_boot3_jwt_loginPage.service.UserProService;
 @RestController
 @RequestMapping("/login")
 @CrossOrigin(origins = "http://localhost:3000")
-
 public class LoginController {
 
     @Autowired
@@ -65,14 +65,16 @@ public class LoginController {
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<Product> getAllTheProducts() {
-        return service.getProducts();
+    public ResponseEntity<List<Product>> getAllTheProducts() {
+        List<Product> listOfProducts = service.getProducts();
+        return ResponseEntity.status(HttpStatus.OK).body(listOfProducts);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public Product getProductById(@PathVariable int id) {
-        return service.getProduct(id);
+    public ResponseEntity<Product> getProductById(@PathVariable int id) {
+        Product product = service.getProduct(id);
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @PostMapping("/authenticate")
@@ -89,8 +91,9 @@ public class LoginController {
     }
 
     @PostMapping("/Register")
-    public UserInformation addNewUser(@RequestBody UserInformation userInfo) {
-        return service.regUser(userInfo);
+    public ResponseEntity<UserInformation> addNewUser(@RequestBody UserInformation userInfo) {
+        UserInformation result = service.regUser(userInfo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
 }
